@@ -17,6 +17,7 @@ phase2_bootloader:
 	call ascii_decompess
 	
 	mov si, large_buffer0
+	mov bl, 15
 	call puts
 	
 	;test the mode
@@ -28,7 +29,7 @@ phase2_bootloader:
 .test_loop:
 	inc bl
 	int 0x10
-	jmp .test_loop
+	;jmp .test_loop
 	
 	jmp hang
 
@@ -41,11 +42,11 @@ ascii_decompess:
 	
 .loop:
 	lodsw
-	;ah = char
-	;al = repeat length
-	cmp al, 0
+	;al = char
+	;ah = repeat length
+	cmp ah, 0
 	je .special
-	mov cl, al
+	mov cl, ah
 	xor ch, ch
 
 .repeat:
@@ -54,18 +55,21 @@ ascii_decompess:
 	jmp .loop
 	
 .special:
-	cmp ah, 0x5f
+	cmp al, 0x5f
 	je .string
-	cmp ah, 0xee
+	cmp al, 0xee
 	je .end
 	jmp .loop
 
 .string:
 	lodsb
+	cmp al, 0x00
 	jz .loop
 	stosb
 	jmp .string
 
 .end:
+	mov al, 0
+	stosb
 	pop ax
 	ret
