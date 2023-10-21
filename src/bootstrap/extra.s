@@ -11,6 +11,14 @@ phase2_bootloader:
 	mov al, 0x10
 	int 0x10
 	
+	;decompress hello world string
+	mov si, helloworld_compressed
+	mov di, large_buffer0
+	call ascii_decompess
+	
+	mov si, large_buffer0
+	call puts
+	
 	;test the mode
 	mov cx, 256
 	
@@ -41,11 +49,22 @@ ascii_decompess:
 	xor ch, ch
 
 .repeat:
+	stosb
 	loop .repeat
 	jmp .loop
 	
 .special:
-	
+	cmp ah, 0x5f
+	je .string
+	cmp ah, 0xee
+	je .end
+	jmp .loop
+
+.string:
+	lodsb
+	jz .loop
+	stosb
+	jmp .string
 
 .end:
 	pop ax
