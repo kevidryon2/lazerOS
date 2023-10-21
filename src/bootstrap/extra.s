@@ -38,11 +38,73 @@ phase2_bootloader:
 	jz .floppy
 
 .hdd:
-	jmp hang
+	jmp .loading
 
 .floppy:
 	mov si, menutext_floppy
 	call puts
+	mov ah, 0x00
+	int 0x16
+	jmp .loading
+
+.loading:
+	mov si, loading_text
+	call puts
+	
+	;get memory map for kernel through E820
+	xor ebx, ebx
+	mov di, kernel_memmap
+	mov edx, 0x0534D4150
+	xor bp, bp
+
+.memory_loop:
+	mov eax, 0xe820
+	mov ecx, 24
+	
+	int 0x15
+	
+	mov edx, 0x0534D4150
+	
+	pusha
+	
+	mov ah, 0x0e
+	mov al, '.'
+	int 0x10
+	
+	popa
+	
+	jc .end_of_list
+	
+	inc bp
+	
+	xor ch, ch
+	add di, cx
+	
+	cmp ebx, 0
+	je .end_of_list
+	
+	jmp .memory_loop
+
+.end_of_list:
+	
+	mov [kernel_memmap_size], bp
+	
+	;switch into protected mode
+	in al, 0x92
+	test al, 2
+	jnz .a20_enabled
+	or al, 2
+	and al, 0xFE
+	out 0x92, al
+	
+.a20_enabled:
+	mov ah, 0x0e
+	mov al, '.'
+	int 0x10
+	
+	cli
+	
+	
 	jmp hang
 
 ;si: text to decompress
@@ -93,6 +155,7 @@ ascii_decompress_alt:
 	pop ax
 	ret
 
+loading_text: db "Loading", 0
 menutext_floppy: db "Welcome to lazerOS!", 13, 10, 13, 10, " Press 'r' to run the OS, or press 'i' to install.", 13, 10, 13, 10, ' ', 0
 
 logo:

@@ -9,3 +9,8 @@ buffer3: resb 16
 
 large_buffer0: resb 512
 large_buffer1: resb 512
+
+absolute 0xE820
+
+kernel_memmap_size: resw 1
+kernel_memmap: resb 1024

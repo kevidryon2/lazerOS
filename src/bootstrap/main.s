@@ -87,6 +87,7 @@ start:
 	jmp phase2_bootloader
 
 hang:
+	hlt
 	jmp hang
 
 ;buffer in DI
