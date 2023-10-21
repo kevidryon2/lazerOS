@@ -59,7 +59,7 @@ phase2_bootloader:
 
 .memory_loop:
 	mov eax, 0xe820
-	mov ecx, 24
+	mov ecx, 20
 	
 	int 0x15
 	
@@ -104,12 +104,21 @@ phase2_bootloader:
 	
 	;load gdt
 	cli
-	lgdt [flat_gdt]
+	lgdt [flat_gdt.desc]
 	
 	sti
 	mov ah, 0x0e
 	mov al, '.'
 	int 0x10
+	
+	cli
+	
+	mov eax, cr0
+	or al, 1
+	mov cr0, eax
+	
+	;far jump into the kernel
+	jmp 08h:0x8400
 	
 	jmp hang
 

@@ -45,10 +45,10 @@ start:
 	mov si, low_memory
 	call puts
 	
-	;load extended boot sector (3 sectors, to 0x7e00)
+	;load extended boot sector (20 sectors, to 0x7e00)
 	
 	mov ah, 0x02
-	mov al, 3
+	mov al, 20
 	mov ch, 0
 	mov cl, 2
 	mov dh, 0
