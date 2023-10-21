@@ -31,6 +31,18 @@ phase2_bootloader:
 	mov bl, 12
 	call puts
 	
+	mov al, [drive_num]
+	
+	shr al, 7
+	
+	jz .floppy
+
+.hdd:
+	jmp hang
+
+.floppy:
+	mov si, menutext_floppy
+	call puts
 	jmp hang
 
 ;si: text to decompress
@@ -81,7 +93,7 @@ ascii_decompress_alt:
 	pop ax
 	ret
 
-
+menutext_floppy: db "Welcome to lazerOS!", 13, 10, 13, 10, " Press 'r' to run the OS, or press 'i' to install.", 13, 10, 13, 10, ' ', 0
 
 logo:
 db 161
