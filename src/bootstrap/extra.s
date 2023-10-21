@@ -8,68 +8,150 @@ phase2_bootloader:
 	;mov al, 0x12
 	;mov al, 0x10
 	;mov al, 0x04
-	mov al, 0x10
+	mov al, 0x03
 	int 0x10
 	
 	;decompress hello world string
-	mov si, helloworld_compressed
+	mov si, logo
 	mov di, large_buffer0
-	call ascii_decompess
+	mov bl, ' '
+	mov bh, '#'
+	call ascii_decompress_alt
 	
 	mov si, large_buffer0
-	mov bl, 15
+	mov bl, 12
 	call puts
 	
-	;test the mode
-	mov cx, 256
-	
-	mov ah, 0x0e
-	mov al, '/'
-	
-.test_loop:
-	inc bl
-	int 0x10
-	;jmp .test_loop
+	mov si, hello_world
+	mov bl, 12
+	call puts
 	
 	jmp hang
 
-helloworld_compressed: db 0x5f, 0x00, "Hello, World!", 0x00, 0xee, 0x00
-
 ;si: text to decompress
 ;di: decompression buffer
-ascii_decompess:
+;bh: first character
+;bl: second character
+ascii_decompress_alt:
 	push ax
+	push cx
+	push dx
+	
+	mov dx, 255
 	
 .loop:
-	lodsw
-	;al = char
-	;ah = repeat length
-	cmp ah, 0
-	je .special
-	mov cl, ah
-	xor ch, ch
-
-.repeat:
+	inc dx
+	lodsb
+	;0: special
+	cmp al, 0
+	je .cmd
+	mov cl, al
+	and dl, 1
+	jz .repeat_b
+	
+.repeat_a:
+	mov al, bh
 	stosb
-	loop .repeat
+	loop .repeat_a
 	jmp .loop
 	
-.special:
-	cmp al, 0x5f
-	je .string
+.repeat_b:
+	mov al, bl
+	stosb
+	loop .repeat_b
+	jmp .loop
+
+.cmd:
+	lodsb
 	cmp al, 0xee
 	je .end
 	jmp .loop
 
-.string:
-	lodsb
-	cmp al, 0x00
-	jz .loop
-	stosb
-	jmp .string
-
 .end:
-	mov al, 0
-	stosb
+	pop dx
+	pop cx
 	pop ax
 	ret
+
+;compressed logo
+logo:
+db 161
+
+db 1
+db 53
+db 12
+db 1
+db 11
+db 2
+
+db 1
+db 53
+db 1
+db 10
+db 1
+db 1
+db 1
+db 12
+
+db 1
+db 53
+db 1
+db 10
+db 1
+db 1
+db 1
+db 12
+
+db 1
+db 1
+db 12
+db 1
+db 12
+db 1
+db 12
+db 1
+db 12
+db 1
+db 1
+db 10
+db 1
+db 1
+db 11
+db 2
+
+db 1
+db 12
+db 1
+db 12
+db 1
+db 1
+db 1
+db 10
+db 1
+db 1
+db 1
+db 12
+db 1
+db 10
+db 1
+db 11
+db 1
+db 2
+
+db 1
+db 1
+db 12
+db 2
+db 10
+db 2
+db 12
+db 1
+db 1
+db 12
+db 1
+db 10
+db 1
+db 11
+db 1
+
+db 0, 0xee
