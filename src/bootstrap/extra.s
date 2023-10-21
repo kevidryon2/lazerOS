@@ -102,8 +102,14 @@ phase2_bootloader:
 	mov al, '.'
 	int 0x10
 	
+	;load gdt
 	cli
+	lgdt [flat_gdt]
 	
+	sti
+	mov ah, 0x0e
+	mov al, '.'
+	int 0x10
 	
 	jmp hang
 
@@ -154,6 +160,46 @@ ascii_decompress_alt:
 	pop cx
 	pop ax
 	ret
+
+flat_gdt:
+	;entry 0
+	dq 0
+	
+	;32-bit code
+	dw 0xffff
+	dw 0
+	db 0
+	db 0b10011010
+	db 0b11001111
+	db 0
+	
+	;32-bit data
+	dw 0xffff
+	dw 0
+	db 0
+	db 0b10010010
+	db 0b11001111
+	db 0
+	
+	;16-bit code
+	dw 0xffff
+	dw 0
+	db 0
+	db 0b10011010
+	db 0b00001111
+	db 0
+	
+	;16-bit data
+	dw 0xffff
+	dw 0
+	db 0
+	db 0b10010010
+	db 0b00001111
+	db 0
+
+.desc:
+	dw .desc - flat_gdt - 1
+	dd flat_gdt
 
 loading_text: db "Loading", 0
 menutext_floppy: db "Welcome to lazerOS!", 13, 10, 13, 10, " Press 'r' to run the OS, or press 'i' to install.", 13, 10, 13, 10, ' ', 0
