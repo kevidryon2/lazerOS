@@ -24,6 +24,14 @@ build/kernel.bin:
 										-fmerge-all-constants -fno-function-cse \
 										-Wl,-z,norelro -march=i386 -mfpmath=387 \
 										-masm=intel
+										
+	$(CC) src/kernel/*.c -o build/kernel_debug -ffunction-sections -T src/kernel/kernel.ld \
+										-nostartfiles -m32 -fno-pie -O0 -g -fdefer-pop \
+										-fomit-frame-pointer -foptimize-sibling-calls \
+										-fno-inline -finline-small-functions \
+										-fmerge-all-constants -fno-function-cse \
+										-Wl,-z,norelro -march=i386 -mfpmath=387 \
+										-masm=intel 
 	
 	$(STRIP) build/kernel   -R .comment -R .dynamic -R .eh_frame_hdr \
 							-R .gnu.hash -R .dyn* -R .rel.dyn -R .eh_frame \
@@ -45,6 +53,9 @@ build/kernel.bin:
 
 build/%.bin: src/%/main.s
 	nasm $< -o $@
+	
+burn: clean build/lz.img
+	dd if=build/lz.img of=/dev/sdb
 
 bochs-debug: clean build/lz.img
 	bochs -f bochs_config_debug

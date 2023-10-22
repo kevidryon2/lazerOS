@@ -35,7 +35,7 @@ phase2_bootloader:
 	
 	shr al, 7
 	
-	jz .floppy
+	jmp .floppy
 
 .hdd:
 	jmp .loading
