@@ -33,6 +33,10 @@ void start() {
 					);
 		vga_printf(7, 0, " Type %d\n", MEMORY_MAP[i].reg_type);
 	}
+	
+	for (int i=0; i<10000; i++) {
+		vga_printf(7, 0, "%4x-", i);
+	}
 
 	while (true) {
 		

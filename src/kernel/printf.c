@@ -66,6 +66,7 @@ void vga_printf_decimal(int n, Color fg, Color bg, int digits) {
 
 void vga_printf_hex(int n, Color fg, Color bg, bool uppercase, int digits) {
 	char buffer[16];
+	memset(buffer, 16, '0');
 	itoa(buffer, 16, n, 16, uppercase);
 	if (digits) {
 		int padding = positive(digits-strlen(buffer));
