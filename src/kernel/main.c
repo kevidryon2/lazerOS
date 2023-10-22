@@ -52,14 +52,12 @@ void start() {
 		
 		vga_printf(7, 0, "%8x", MEMORY_MAP[i].reg_address+MEMORY_MAP[i].reg_length);
 		
-		vga_printf(7, 0, "    %d B\n", MEMORY_MAP[i].reg_length);
+		vga_printf(7, 0, "    %d B\n", MEMORY_MAP[i].reg_address);
 		//vga_printf(7, 0, "    %x B\n", MEMORY_MAP[i].reg_length);
 	}
 	
-	for (int i=0; i<10000; i++) {
-		//vga_printf(7, 0, "%4x-", i);
-	}
-
+	vga_putc('\n', 12, 0);
+	
 	while (true) {
 		
 	}

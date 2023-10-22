@@ -92,7 +92,6 @@ void vga_printf(Color fg, Color bg, char *fmt, ...) {
 	
 	char c;
 	int i = 0;
-	int vi = 0;
 	
 	while (fmt[i]) {
 		c = fmt[i];
@@ -104,15 +103,14 @@ void vga_printf(Color fg, Color bg, char *fmt, ...) {
 					case '%':
 						vga_putc('%', fg, bg);
 						break;
-					case 'i':
 					case 'd':
-						vga_printf_decimal(va_arg(args, int), fg, bg, 0);
+						vga_printf_decimal(va_arg(args, int), fg, bg, 1);
 						break;
 					case 'x':
-						vga_printf_hex(va_arg(args, int), fg, bg, false, 0);
+						vga_printf_hex(va_arg(args, int), fg, bg, false, 1);
 						break;
 					case 'X':
-						vga_printf_hex(va_arg(args, int), fg, bg, true, 0);
+						vga_printf_hex(va_arg(args, int), fg, bg, true, 1);
 						break;
 					case 's':
 						vga_puts(va_arg(args, char*), fg, bg);

@@ -211,7 +211,7 @@ flat_gdt:
 	dd flat_gdt
 
 loading_text: db "Loading", 0
-menutext_floppy: db "Welcome to lazerOS!", 13, 10, 13, 10, " Press 'r' to run the OS, or press 'i' to install.", 13, 10, 13, 10, ' ', 0
+menutext_floppy: db "Welcome to lazerOS!", 13, 10, 13, 10, " Press any key to start.", 13, 10, 13, 10, ' ', 0
 
 logo:
 db 161
