@@ -5,6 +5,7 @@ void memset(char *p, int n, char c);
 int strlen(register char *s);
 void reverse(char *s, char *d, int n);
 void reversestr(char *s, char *d);
+void memmove(char *dest, char *src, int count);
 
 #define INDEX(p, i) ((void*)(p)+i)
 

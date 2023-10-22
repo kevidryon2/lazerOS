@@ -2,6 +2,14 @@ void memcpy(char *dest, char *src, int count) {
 	for (int i=0; i<count; i++) *(dest+i) = *(src+i);
 }
 
+void memmove(char *dest, char *src, int count) {
+	if (dest > src) {
+		for (int i=count-1; i>=0; i--) *(dest+i) = *(src+i);
+	} else if (src > dest) {
+		for (int i=0; i<count; i++)	*(dest+i) = *(src+i);
+	}
+}
+
 void memset(char *p, int n, char c) {
 	for (int i=0; i<n; i++) p[i] = c;
 }
