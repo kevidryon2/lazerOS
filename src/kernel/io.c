@@ -1,16 +1,12 @@
 #include "io.h"
 
-void outb(register uint16_t port, register uint8_t data) {
-	__asm__(
-        "mov edx, DWORD PTR [esp+4]\n"
-        "\tmov eax, DWORD PTR [esp+8]\n"
-        "\tout dx, al"
-    );
+void outb( unsigned short port, unsigned char val )
+{
+   asm volatile("outb %0, %1" : : "a"(val), "Nd"(port) );
 }
 
-uint8_t inb(register uint16_t p) {
-    __asm__(
-        "mov edx, DWORD PTR [esp+4]\n"
-        "\tin al, dx"
-    );
+unsigned char inb(unsigned short int port) {
+        unsigned char value;
+        asm volatile ("inb %1, %0" : "=a"(value) : "Nd"(port));
+        return value;
 }

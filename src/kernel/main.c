@@ -4,8 +4,8 @@
 #include "io.h"
 
 char *string_table[] = {
-	"Kernel loaded.\nWait... where is the cursor!?",
-	"Kernel loaded\n",
+	"Kernel 1st half loaded.\n",
+	"Memory map:\n",
 };
 
 void start() {
@@ -14,11 +14,17 @@ void start() {
 	//initially, no more than 20 (16 belonging to the kernel) sectors are loaded.
 	//the kernel is at the start of the fourth sector, and is loaded at 0x8400
 	
-	vga_clearscreen(0);
+	vga_clearscreen(7, 0);
 	
 	vga_activate_cursor();
 	
-	vga_puts(string_table[0], 15, 0);
+	vga_puts(string_table[0], 7, 0);
+
+	//Print memory map
+	vga_puts(string_table[1], 7, 0);
+	for (int i=0; i<3000; i++) {
+		vga_printf(15, 0, "%x", rand()%256);
+	}
 
 	while (true) {
 		

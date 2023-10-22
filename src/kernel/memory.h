@@ -1,14 +1,17 @@
 #include <stdint.h>
 
-void memcpy(register char *dest, register char *src, register int count);
+void memcpy(char *dest, char *src, int count);
+void memset(char *p, int n, char c);
 int strlen(register char *s);
+void reverse(char *s, char *d, int n);
+void reversestr(char *s, char *d);
 
 #define INDEX(p, i) ((void*)(p)+i)
 
 //Memory regions
 
 #define VGA_SCREEN ((char*)0xb8000)
-#define MEMORY_MAP ((int*)0xe822)
+#define MEMORY_SEGS_COUNT (*((uint16_t*)0xe820))
 #define MEMORY_MAP ((MemorySegment*)0xe822)
 
 typedef struct {

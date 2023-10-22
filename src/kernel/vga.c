@@ -1,12 +1,13 @@
 #include "vga.h"
 #include "memory.h"
+#include "io.h"
 
 int cursor_x = 0;
 int cursor_y = 0;
 
 void vga_activate_cursor() {
 	outb(0x3D4, 0x0A);
-	outb(0x3D5, (inb(0x3D5) & 0xC0) | 12);
+	outb(0x3D5, (inb(0x3D5) & 0xC0) | 14);
  
 	outb(0x3D4, 0x0B);
 	outb(0x3D5, (inb(0x3D5) & 0xE0) | 15);
@@ -27,35 +28,36 @@ void vga_setc(char c, int x, int y, Color fg, Color bg) {
 }
 
 void vga_putc(char c, Color fg, Color bg) {
-	vga_setc(c, cursor_x, cursor_y, fg, bg);
-	cursor_x++;
-	if (cursor_x >= VGA_SCREEN_WIDTH) {
-		cursor_x = 0;
-		cursor_y++;
+	switch (c) {
+		case '\n':
+			cursor_x=0;
+			cursor_y++;
+			vga_update_cursor();
+			return;
+		default:
+			vga_setc(c, cursor_x, cursor_y, fg, bg);
+			cursor_x++;
+			if (cursor_x >= VGA_SCREEN_WIDTH) {
+				cursor_x = 0;
+				cursor_y++;
+			}
+			vga_update_cursor();
+			break;
 	}
-	vga_update_cursor();
 }
 
 void vga_puts(char *s, Color fg, Color bg) {
 	char c;
 	for (int i=0; i<strlen(s); i++) {
 		c = s[i];
-		switch (c) {
-			case '\n':
-				cursor_x=0;
-				cursor_y++;
-				continue;
-			default:
-				vga_putc(c, fg, bg);
-				break;
-		}
+		vga_putc(c, fg, bg);
 	}
 }
 
-void vga_clearscreen(Color c) {
+void vga_clearscreen(Color cursor, Color bg) {
 	for (int x=0; x<VGA_SCREEN_WIDTH; x++) {
 		for (int y=0; y<VGA_SCREEN_HEIGHT; y++) {
-			vga_setc(0, x, y, 0, c);
+			vga_setc(0, x, y, cursor, bg);
 		}
 	}
 }

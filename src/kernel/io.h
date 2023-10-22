@@ -1,3 +1,4 @@
 #include <stdint.h>
 
-void outb(register uint16_t port, register uint8_t data);
+void outb( unsigned short port, unsigned char val );
+unsigned char inb(unsigned short int port);
