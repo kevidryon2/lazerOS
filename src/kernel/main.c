@@ -23,7 +23,7 @@ void start() {
 	//Print memory map
 	vga_puts(string_table[1], 7, 0);
 	for (int i=0; i<3000; i++) {
-		vga_printf(15, 0, "%x", rand()%256);
+		vga_printf(15, 0, "%2x", rand()%256);
 	}
 
 	while (true) {

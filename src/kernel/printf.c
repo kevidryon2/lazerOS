@@ -63,7 +63,9 @@ void vga_printf_decimal(int n, Color fg, Color bg, int digits) {
 void vga_printf_hex(int n, Color fg, Color bg, bool uppercase, int digits) {
 	char buffer[16];
 	itoa(buffer, 16, n, 16, uppercase);
-	
+	if (digits) {
+		memmove(buffer+(digits-strlen(buffer)), buffer, strlen(buffer));
+	}
 	vga_puts(buffer, fg, bg);
 }
 
