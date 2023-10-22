@@ -56,7 +56,11 @@ void itoa(char *s, int ssize, int n, int radix, bool uppercase) {
 void vga_printf_decimal(int n, Color fg, Color bg, int digits) {
 	char buffer[16];
 	itoa(buffer, 16, n, 10, false);
-	
+	if (digits) {
+		int padding = positive(digits-strlen(buffer));
+		memmove(buffer+padding, buffer, strlen(buffer)+1);
+		memset(buffer, padding, '0');
+	}
 	vga_puts(buffer, fg, bg);
 }
 
@@ -64,12 +68,12 @@ void vga_printf_hex(int n, Color fg, Color bg, bool uppercase, int digits) {
 	char buffer[16];
 	itoa(buffer, 16, n, 16, uppercase);
 	if (digits) {
-		memmove(buffer+(digits-strlen(buffer)), buffer, strlen(buffer));
+		int padding = positive(digits-strlen(buffer));
+		memmove(buffer+padding, buffer, strlen(buffer)+1);
+		memset(buffer, padding, '0');
 	}
 	vga_puts(buffer, fg, bg);
 }
-
-
 
 void vga_printf(Color fg, Color bg, char *fmt, ...) {
 	va_list args;

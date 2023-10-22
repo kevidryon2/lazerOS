@@ -17,9 +17,9 @@ void vga_update_cursor() {
 	int pos = cursor_y * VGA_SCREEN_WIDTH + cursor_x;
 
 	outb(0x3D4, 0x0F);
-	outb(0x3D5, (uint8_t) (pos & 0xFF));
+	outb(0x3D5, (uint8_t)(pos & 0xFF));
 	outb(0x3D4, 0x0E);
-	outb(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
+	outb(0x3D5, (uint8_t)((pos >> 8) & 0xFF));
 }
 
 void vga_setc(char c, int x, int y, Color fg, Color bg) {
@@ -32,6 +32,10 @@ void vga_putc(char c, Color fg, Color bg) {
 		case '\n':
 			cursor_x=0;
 			cursor_y++;
+			vga_update_cursor();
+			return;
+		case '\t':
+			cursor_x += 8;
 			vga_update_cursor();
 			return;
 		default:

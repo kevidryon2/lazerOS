@@ -2,6 +2,7 @@
 #include "vga.h"
 #include "memory.h"
 #include "io.h"
+#include "printf.h"
 
 char *string_table[] = {
 	"Kernel 1st half loaded.\n",
@@ -20,10 +21,17 @@ void start() {
 	
 	vga_puts(string_table[0], 7, 0);
 
+	vga_putc('\n', 0, 0);
+
 	//Print memory map
 	vga_puts(string_table[1], 7, 0);
-	for (int i=0; i<3000; i++) {
-		vga_printf(15, 0, "%2x", rand()%256);
+	
+	for (int i=0; i<MEMORY_SEGS_COUNT; i++) {
+		vga_printf(7, 0, "\t%8x", MEMORY_MAP[i].reg_address);
+		vga_putc('-', 7, 0);
+		vga_printf(7, 0, "%8x,", MEMORY_MAP[i].reg_address+MEMORY_MAP[i].reg_length
+					);
+		vga_printf(7, 0, " Type %d\n", MEMORY_MAP[i].reg_type);
 	}
 
 	while (true) {
