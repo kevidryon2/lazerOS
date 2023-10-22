@@ -2,10 +2,10 @@
 
 void memcpy(char *dest, char *src, int count);
 void memset(char *p, int n, char c);
-int strlen(register char *s);
 void reverse(char *s, char *d, int n);
 void reversestr(char *s, char *d);
 void memmove(char *dest, char *src, int count);
+int strlen(register char *s);
 
 #define INDEX(p, i) ((void*)(p)+i)
 
@@ -16,7 +16,9 @@ void memmove(char *dest, char *src, int count);
 #define MEMORY_MAP ((MemorySegment*)0xe822)
 
 typedef struct {
-	uint64_t reg_address;
-	uint64_t reg_length;
+	uint32_t reg_address_low;
+	uint32_t reg_address_high;
+	uint32_t reg_length_low;
+	uint32_t reg_length_high;
 	uint32_t reg_type;
 } MemorySegment;
