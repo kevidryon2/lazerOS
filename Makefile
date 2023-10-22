@@ -65,3 +65,6 @@ bochs: clean build/lz.img
 
 commit: clean build/lz.img
 	bash ./commit.sh $(V)
+	
+push:
+	git push -u codeberg master
