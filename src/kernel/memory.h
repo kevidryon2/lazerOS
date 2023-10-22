@@ -16,9 +16,7 @@ int strlen(register char *s);
 #define MEMORY_MAP ((MemorySegment*)0xe822)
 
 typedef struct {
-	uint32_t reg_address_low;
-	uint32_t reg_address_high;
-	uint32_t reg_length_low;
-	uint32_t reg_length_high;
+	uint64_t reg_address;
+	uint64_t reg_length;
 	uint32_t reg_type;
 } MemorySegment;

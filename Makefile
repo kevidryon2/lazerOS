@@ -22,14 +22,16 @@ build/kernel.bin:
 										-fomit-frame-pointer -foptimize-sibling-calls \
 										-fno-inline -finline-small-functions \
 										-fmerge-all-constants -fno-function-cse \
-										-Wl,-z,norelro -march=i386 -mfpmath=387
+										-Wl,-z,norelro -march=i386 -mfpmath=387 -nostdlib \
+										-Wpedantic -nodefaultlibs
 										
 	$(CC) src/kernel/*.c -o build/kernel_debug -ffunction-sections -T src/kernel/kernel.ld \
 										-nostartfiles -m32 -fno-pie -O0 -g -fdefer-pop \
 										-fomit-frame-pointer -foptimize-sibling-calls \
 										-fno-inline -finline-small-functions \
 										-fmerge-all-constants -fno-function-cse \
-										-Wl,-z,norelro -march=i386 -mfpmath=387
+										-Wl,-z,norelro -march=i386 -mfpmath=387 -nostdlib \
+										-nodefaultlibs -Wpedantic
 	
 	$(STRIP) build/kernel   -R .comment -R .dynamic -R .eh_frame_hdr \
 							-R .gnu.hash -R .dyn* -R .rel.dyn -R .eh_frame \

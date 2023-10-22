@@ -18,6 +18,7 @@ struct {
 	{0xa,0x0,"RAM       "},
 	{0xd,0x0,"Reserved  "},
 	{0xe,0x0,"ACPI      "},
+	{0xe,0x0,"ACPI NVS  "},
 	{0xf,0xc,"Bad memory"},
 };
 
@@ -44,11 +45,15 @@ void start() {
 					ram_segs_table[MEMORY_MAP[i].reg_type].fg,
 					ram_segs_table[MEMORY_MAP[i].reg_type].bg
 					);
-		vga_printf(7, 0, "    %8x%8x", MEMORY_MAP[i].reg_address_high, MEMORY_MAP[i].reg_address_low);
+		
+		vga_printf(7, 0, "%8x", MEMORY_MAP[i].reg_address);
+		
 		vga_putc('-', 7, 0);
-		vga_printf(7, 0, "%8x%8x", MEMORY_MAP[i].reg_address_high+MEMORY_MAP[i].reg_length_high,
-									MEMORY_MAP[i].reg_address_low+MEMORY_MAP[i].reg_length_low);
-		vga_printf(7, 0, "    (%d KB)\n", MEMORY_MAP[i].reg_length_low/1000);
+		
+		vga_printf(7, 0, "%8x", MEMORY_MAP[i].reg_address+MEMORY_MAP[i].reg_length);
+		
+		vga_printf(7, 0, "    %d B\n", MEMORY_MAP[i].reg_length);
+		//vga_printf(7, 0, "    %x B\n", MEMORY_MAP[i].reg_length);
 	}
 	
 	for (int i=0; i<10000; i++) {

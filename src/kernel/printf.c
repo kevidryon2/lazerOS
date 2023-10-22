@@ -2,16 +2,16 @@
 #include <stdarg.h>
 #include <stdbool.h>
 
-void itoa(char *s, int ssize, int n, int radix, bool uppercase) {
-
+char *itoa(char *s, int n, int radix, bool uppercase) {
 	int i = 0;
 	int on = n;
+	bool negative;
 	
 	char radix_symbols_upper[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	char radix_symbols_lower[] = "0123456789abcdefghijklmnopqrstuvwxyz";
 	
 	while (n>0) {
-		s[i] = (uppercase) ? 
+		s[i] = (uppercase) ?
 				(radix_symbols_upper[n%radix]) :
 				(radix_symbols_lower[n%radix]);
 				
@@ -22,9 +22,10 @@ void itoa(char *s, int ssize, int n, int radix, bool uppercase) {
 	s[i] = 0;
 	
 	//reverse the string
-	char buffer[ssize];
 	
-	reversestr(s, buffer);
+	reversestr(s);
+	
+	return s;
 	
 	/*if (radix != 10) {
 	
@@ -49,30 +50,39 @@ void itoa(char *s, int ssize, int n, int radix, bool uppercase) {
 		vga_putc('\n', 11, 0);
 	
 	}*/
-	
-	memcpy(s, buffer, ssize);
 }
 
 void vga_printf_decimal(int n, Color fg, Color bg, int digits) {
+	
+	digits = digits ? digits : 1;
+	
 	char buffer[16];
-	itoa(buffer, 16, n, 10, false);
+	memset(buffer, 16, 0);
+	itoa(buffer, n, 10, false);
+	
 	if (digits) {
 		int padding = positive(digits-strlen(buffer));
 		memmove(buffer+padding, buffer, strlen(buffer)+1);
 		memset(buffer, padding, '0');
 	}
+	
 	vga_puts(buffer, fg, bg);
 }
 
 void vga_printf_hex(int n, Color fg, Color bg, bool uppercase, int digits) {
+	
+	digits = digits ? digits : 1;
+	
 	char buffer[16];
-	memset(buffer, 16, '0');
-	itoa(buffer, 16, n, 16, uppercase);
+	memset(buffer, 16, 0);
+	itoa(buffer, n, 16, uppercase);
+	
 	if (digits) {
 		int padding = positive(digits-strlen(buffer));
 		memmove(buffer+padding, buffer, strlen(buffer)+1);
 		memset(buffer, padding, '0');
 	}
+	
 	vga_puts(buffer, fg, bg);
 }
 
@@ -119,7 +129,7 @@ void vga_printf(Color fg, Color bg, char *fmt, ...) {
 					case '6':
 					case '7':
 					case '8':
-					case '9':
+					case '9':;
 						int digits = c - '0';
 						i++;
 						c = fmt[i];

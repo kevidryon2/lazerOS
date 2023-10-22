@@ -26,9 +26,14 @@ void reverse(char *s, char *d, int n) {
 	}
 }
 
-void reversestr(char *s, char *d) {
-	for (int i=0; i<strlen(s); i++) {
-		d[strlen(s)-1-i] = s[i];
+void reversestr(char *s) {
+	int start = 0;
+	int end = strlen(s)-1;
+	while (start < end) {
+		char temp = s[start];
+		s[start] = s[end];
+		s[end] = temp;
+		start++;
+		end--;
 	}
-	d[strlen(s)] = 0;
 }
