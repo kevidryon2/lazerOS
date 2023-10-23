@@ -11,7 +11,7 @@ run: build/lz.img
 	qemu-system-i386 -hda build/lz.img
 
 build/lz.img: build/bootstrap.bin build/kernel.bin
-	dd if=/dev/zero of=build/lz.img bs=1K count=1440
+	dd if=/dev/zero of=build/lz.img bs=1M count=20
 	
 	dd if=build/bootstrap.bin of=build/lz.img conv=notrunc
 	dd if=build/kernel.bin of=build/lz.img conv=notrunc bs=512 seek=4
