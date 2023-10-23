@@ -64,9 +64,15 @@ void start() {
 	
 	//List PCI devices
 	vga_puts(string_table[2], 7, 0);
-	for (int i=0; i<16; i++) {
-		if (true) {
-			vga_printf(15, 0, "vendor %2x, %d %d device.\n", pci_get_vendor(addr), addr.bus, addr.dev);
+	for (int i=0; i<8192; i++) {
+		if (
+				((addr.bus % 16) == 0) &
+				(addr.dev == 0)
+			) {
+			vga_printf(7, 0, "\tPCI bus %d - %d\n", addr.bus, addr.bus+15);
+		}
+		if (pci_check_valid_device(addr)) {
+			vga_printf(15, 0, "\t\tvendor %2x, %d %d device.\n", pci_get_vendor(addr), addr.bus, addr.dev);
 		}
 		
 		addr.dev++;

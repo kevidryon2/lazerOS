@@ -16,7 +16,14 @@ void vga_activate_cursor() {
 void vga_update_cursor() {
 
 	if (cursor_y >= VGA_SCREEN_HEIGHT) {
-		
+		cursor_y--;
+		memmove(VGA_SCREEN,
+				VGA_SCREEN+VGA_SCREEN_WIDTH*2,
+				VGA_SCREEN_WIDTH*VGA_SCREEN_HEIGHT*2-VGA_SCREEN_WIDTH*2
+				);
+		for (int i=0; i<VGA_SCREEN_WIDTH; i++) {
+			vga_setc(0, i, VGA_SCREEN_HEIGHT-1, 7, 0);
+		}
 	}
 
 	int pos = cursor_y * VGA_SCREEN_WIDTH + cursor_x;
