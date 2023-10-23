@@ -67,6 +67,7 @@ commit: clean build/lz.img
 	bash ./commit.sh $(V)
 	
 push:
-	git pull master
+	git fetch -u codeberg
+	git fetch -u github
 	git push -u codeberg master
 	git push -u github master
