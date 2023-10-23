@@ -66,18 +66,21 @@ void start() {
 	vga_puts(string_table[2], 7, 0);
 	for (int i=0; i<8192; i++) {
 		if (
-				((addr.bus % 16) == 0) &
-				(addr.dev == 0)
+				((addr.bus % 4) == 0) &&
+				(addr.dev == 0) &&
+				(addr.func == 0)
 			) {
-			vga_printf(7, 0, "\tPCI bus %d - %d\n", addr.bus, addr.bus+15);
+			vga_printf(7, 0, "\tPCI buses %d - %d\n", addr.bus, addr.bus+3);
 		}
-		if (pci_check_valid_device(addr)) {
-			vga_printf(15, 0, "\t\tvendor %2x, %d %d device.\n", pci_get_vendor(addr), addr.bus, addr.dev);
+		if (pci_check_vendor(addr.bus, addr.dev) != 0xffffffff) {
+			vga_printf(15, 0, "\t\tvendor %4x, %d %d %d device.\n", pci_check_vendor(addr.bus, addr.dev), addr.bus, addr.dev, addr.func);
+		}		
+		addr.func++;
+		
+		if (addr.func == 0) {
+			addr.dev++;
+			if (addr.dev == 0) addr.bus++;
 		}
-		
-		addr.dev++;
-		
-		if (addr.dev == 0) addr.bus++;
 	}
 	
 	while (true) {

@@ -8,7 +8,7 @@ clean:
 	rm -rf build/*
 
 run: build/lz.img
-	qemu-system-i386 -hda build/lz.img
+	qemu-system-i386 -drive file=build/lz.img,if=virtio,format=raw
 
 build/lz.img: build/bootstrap.bin build/kernel.bin
 	dd if=/dev/zero of=build/lz.img bs=1M count=20
