@@ -65,23 +65,18 @@ void start() {
 	//List PCI devices
 	vga_puts(string_table[2], 7, 0);
 	for (int i=0; i<8192; i++) {
-		if (
-				((addr.bus % 4) == 0) &&
-				(addr.dev == 0) &&
-				(addr.func == 0)
-			) {
-			vga_printf(7, 0, "\tPCI buses %d - %d\n", addr.bus, addr.bus+3);
-		}
+		
 		if (pci_check_vendor(addr.bus, addr.dev) != 0xffffffff) {
-			vga_printf(15, 0, "\t\tvendor %4x, %d %d %d device.\n", pci_check_vendor(addr.bus, addr.dev), addr.bus, addr.dev, addr.func);
-		}		
-		addr.func++;
+			vga_printf(15, 0, "\t\t%2x:%2x.%d: %8x.\n", addr.bus, addr.dev, addr.func, pci_check_vendor(addr.bus, addr.dev));
+		}
 		
 		if (addr.func == 0) {
 			addr.dev++;
 			if (addr.dev == 0) addr.bus++;
 		}
 	}
+	
+	vga_puts("\noi", 13, 0);
 	
 	while (true) {
 		
