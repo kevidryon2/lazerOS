@@ -71,3 +71,7 @@ push:
 	git fetch -u github
 	git push -u codeberg master
 	git push -u github master
+
+pull:
+	git pull https://codeberg.org/kevidryon2/lazerOS
+	git pull https://github.com/kevidryon2/lazerOS
