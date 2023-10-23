@@ -3,10 +3,12 @@
 #include "memory.h"
 #include "io.h"
 #include "printf.h"
+#include "pci.h"
 
 char *string_table[] = {
 	"Kernel 1st half loaded.\n",
 	"Memory map:\n",
+	"PCI Devices:\n"
 };
 
 struct {
@@ -57,6 +59,20 @@ void start() {
 	}
 	
 	vga_putc('\n', 12, 0);
+	
+	PCI_Address addr = {1, 0, 0, 0, 0};
+	
+	//List PCI devices
+	vga_puts(string_table[2], 7, 0);
+	for (int i=0; i<16; i++) {
+		if (true) {
+			vga_printf(15, 0, "vendor %2x, %d %d device.\n", pci_get_vendor(addr), addr.bus, addr.dev);
+		}
+		
+		addr.dev++;
+		
+		if (addr.dev == 0) addr.bus++;
+	}
 	
 	while (true) {
 		
