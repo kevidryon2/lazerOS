@@ -20,7 +20,7 @@ uint16_t pciconfig_read_word(uint8_t bus, uint8_t slot, uint8_t func, uint8_t of
     return tmp;
 }
 
-uint16_t pci_check_vendor(uint8_t bus, uint8_t slot) {
+uint16_t pci_check_vendor(uint8_t bus, uint8_t slot, uint8_t func) {
     uint16_t vendor, device;
     /* Try and read the first configuration register. Since there are no
      * vendors that == 0xFFFF, it must be a non-existent device. */

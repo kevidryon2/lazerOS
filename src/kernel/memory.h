@@ -1,11 +1,15 @@
 #include <stdint.h>
+#include <stdbool.h>
 
 void memcpy(char *dest, char *src, int count);
 void memset(char *p, int n, char c);
 void reverse(char *s, char *d, int n);
-void reversestr(char *s, char *d);
+void reversestr(char *s);
 void memmove(char *dest, char *src, int count);
 int strlen(register char *s);
+bool contains_l(uint32_t n, uint32_t *a, int l);
+bool contains_w(uint16_t n, uint16_t *a, int l);
+bool contains_b(uint8_t n, uint8_t *a, int l);
 
 #define INDEX(p, i) ((void*)(p)+i)
 

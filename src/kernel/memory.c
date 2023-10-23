@@ -1,3 +1,5 @@
+#include "memory.h"
+
 void memcpy(char *dest, char *src, int count) {
 	for (int i=0; i<count; i++) *(dest+i) = *(src+i);
 }
@@ -36,4 +38,25 @@ void reversestr(char *s) {
 		start++;
 		end--;
 	}
+}
+
+bool contains_l(uint32_t n, uint32_t *a, int l) {
+	for (int i=0; i<l; i++) {
+		if (a[i] == n) return true;
+	}
+	return false;
+}
+
+bool contains_w(uint16_t n, uint16_t *a, int l) {
+	for (int i=0; i<l; i++) {
+		if (a[i] == n) return true;
+	}
+	return false;
+}
+
+bool contains_b(uint8_t n, uint8_t *a, int l) {
+	for (int i=0; i<l; i++) {
+		if (a[i] == n) return true;
+	}
+	return false;
 }

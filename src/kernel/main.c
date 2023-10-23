@@ -41,33 +41,54 @@ void start() {
 	//Print memory map
 	vga_puts(string_table[1], 7, 0);
 	
+	MemorySegment current_seg;
+	
 	for (int i=0; i<MEMORY_SEGS_COUNT; i++) {
+		current_seg = (MEMORY_MAP)[i];
+		
 		vga_puts(
-					ram_segs_table[MEMORY_MAP[i].reg_type].name,
-					ram_segs_table[MEMORY_MAP[i].reg_type].fg,
-					ram_segs_table[MEMORY_MAP[i].reg_type].bg
+					ram_segs_table[current_seg.reg_type].name,
+					ram_segs_table[current_seg.reg_type].fg,
+					ram_segs_table[current_seg.reg_type].bg
 					);
 		
-		vga_printf(7, 0, "%8x", MEMORY_MAP[i].reg_address);
+		vga_printf(7, 0, "%8x", current_seg.reg_address);
 		
 		vga_putc('-', 7, 0);
 		
-		vga_printf(7, 0, "%8x", MEMORY_MAP[i].reg_address+MEMORY_MAP[i].reg_length);
+		vga_printf(7, 0, "%8x", (uint32_t)current_seg.reg_address+(uint32_t)current_seg.reg_length);
 		
-		vga_printf(7, 0, "    %d B\n", MEMORY_MAP[i].reg_address);
-		//vga_printf(7, 0, "    %x B\n", MEMORY_MAP[i].reg_length);
+		vga_printf(7, 0, "    %d B\n", (uint32_t)current_seg.reg_length);
 	}
 	
 	vga_putc('\n', 12, 0);
 	
 	PCI_Address addr = {1, 0, 0, 0, 0};
 	
+	uint32_t vendors[8];
+	uint32_t unique_vendors[8];
+	
 	//List PCI devices
 	vga_puts(string_table[2], 7, 0);
 	for (int i=0; i<8192; i++) {
 		
-		if (pci_check_vendor(addr.bus, addr.dev) != 0xffffffff) {
-			vga_printf(15, 0, "\t\t%2x:%2x.%d: %8x.\n", addr.bus, addr.dev, addr.func, pci_check_vendor(addr.bus, addr.dev));
+		for (int i=0; i<8; i++) {
+			vendors[i] = pci_check_vendor(addr.bus, addr.dev);
+		}
+		
+		memset(unique_vendors, sizeof(unique_vendors), 0xff);
+		
+		int j=0;
+		
+		for (int i=0; i<8; i++) {
+			if (!contains_l(vendors[i], unique_vendors, 8) && vendors[i] != -1) {
+				unique_vendors[j] = vendors[i];
+				j++;
+			}
+		}
+		
+		for (int i=0; i<8; i++) {
+			if (unique_vendors[i] != 0xffffffff) vga_printf(15, 0, "\t%2x:%2x.%d: %8x\n", addr.bus, addr.dev, i, unique_vendors[i]);
 		}
 		
 		if (addr.func == 0) {
@@ -76,7 +97,7 @@ void start() {
 		}
 	}
 	
-	vga_puts("\noi", 13, 0);
+	vga_puts("\nOK", 13, 0);
 	
 	while (true) {
 		
