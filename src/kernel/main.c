@@ -6,7 +6,7 @@
 #include "pci.h"
 
 char *string_table[] = {
-	"Kernel 1st half loaded.\n",
+	"Lower Kernel Loaded.\n",
 	"Memory map:\n",
 	"PCI Devices:\n"
 };
@@ -73,7 +73,7 @@ void start() {
 	for (int i=0; i<8192; i++) {
 		
 		for (int i=0; i<8; i++) {
-			vendors[i] = pci_check_vendor(addr.bus, addr.dev);
+			vendors[i] = pci_check_vendor(addr.bus, addr.dev, i);
 		}
 		
 		memset(unique_vendors, sizeof(unique_vendors), 0xff);
