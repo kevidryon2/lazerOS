@@ -65,30 +65,36 @@ void start() {
 	
 	PCI_Address addr = {1, 0, 0, 0, 0};
 	
-	uint32_t vendors[8];
-	uint32_t unique_vendors[8];
+	uint32_t devices[8];
+	uint16_t unique_devices[8];
 	
 	//List PCI devices
 	vga_puts(string_table[2], 7, 0);
 	for (int i=0; i<8192; i++) {
 		
 		for (int i=0; i<8; i++) {
-			vendors[i] = pci_check_vendor(addr.bus, addr.dev, i);
+			devices[i] = pci_get_device(addr.bus, addr.dev, i);
 		}
 		
-		memset(unique_vendors, sizeof(unique_vendors), 0xff);
+		memset(unique_devices, sizeof unique_devices, 0xff);
 		
 		int j=0;
 		
 		for (int i=0; i<8; i++) {
-			if (!contains_l(vendors[i], unique_vendors, 8) && vendors[i] != -1) {
-				unique_vendors[j] = vendors[i];
+			if (!contains_w(devices[i], unique_devices, 8) && devices[i] != -1) {
+				unique_devices[j] = devices[i];
 				j++;
 			}
 		}
 		
 		for (int i=0; i<8; i++) {
-			if (unique_vendors[i] != 0xffffffff) vga_printf(15, 0, "\t%2x:%2x.%d: %8x\n", addr.bus, addr.dev, i, unique_vendors[i]);
+			if (unique_devices[i] != 0xffff)
+				vga_printf(15, 0, "\t%2x:%2x.%d: V=%4x D=%4x, C=%4x\n",
+									addr.bus, addr.dev, i,
+									pci_get_vendor(addr.bus, addr.dev, addr.func),
+									unique_devices[i],
+									pci_get_class(addr.bus, addr.dev, addr.func)
+						);
 		}
 		
 		if (addr.func == 0) {
